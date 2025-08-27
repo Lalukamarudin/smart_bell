@@ -11,10 +11,10 @@
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 // Detail koneksi database Anda
-$db_host = "localhost";
+$db_host = "interchange.proxy.rlwy.net";
 $db_user = "root";
-$db_pass = "";
-$db_name = "smart_bel";
+$db_pass = "KrMJOGsCKNZEpEaDQcLDotHKiHmKUrsJ";
+$db_name = "railway";
 
 try {
     // Membuat objek koneksi baru
