@@ -11,7 +11,7 @@
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 // Detail koneksi database Anda
-$db_host = "interchange.proxy.rlwy.net";
+$db_host = "mysql.railway.internal";
 $db_user = "root";
 $db_pass = "KrMJOGsCKNZEpEaDQcLDotHKiHmKUrsJ";
 $db_name = "railway";
