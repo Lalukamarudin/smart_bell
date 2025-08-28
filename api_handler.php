@@ -92,7 +92,7 @@ switch ($action) {
 
   case 'ring_bell_manually':
     $bell_name = isset($_GET['bell_name']) ? $_GET['bell_name'] : 'Manual';
-    $esp8266_ip = '192.168.6.40'; 
+    $esp8266_ip = '192.168.93.40'; 
 
     // Pastikan format URL-nya persis seperti ini:
     $request_url = "http://{$esp8266_ip}/ring?bell_name=" . urlencode($bell_name);
