@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 27, 2025 at 11:24 AM
+-- Generation Time: Aug 28, 2025 at 02:26 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -285,7 +285,12 @@ INSERT INTO `activity_log` (`id`, `user_id`, `username`, `action`, `created_at`)
 (243, 10, 'admin', 'Menambah jadwal baru: \'masuk\'', '2025-08-23 00:43:36'),
 (244, 10, 'admin', 'Menambah jadwal baru: \'masuk\'', '2025-08-23 00:47:55'),
 (245, 10, 'admin', 'Memicu bel manual: \'Manual\'', '2025-08-23 00:49:55'),
-(246, 10, 'admin', 'Menambah jadwal baru: \'masuk\'', '2025-08-23 00:50:59');
+(246, 10, 'admin', 'Menambah jadwal baru: \'masuk\'', '2025-08-23 00:50:59'),
+(247, 10, 'admin', 'Menghapus SEMUA jadwal bel.', '2025-08-28 11:57:47'),
+(248, 10, 'admin', 'Memicu bel manual (via DB): \'Bel Masuk\'', '2025-08-28 12:05:02'),
+(249, 10, 'admin', 'Memicu bel manual (via DB): \'Bel Masuk\'', '2025-08-28 12:05:32'),
+(250, 10, 'admin', 'Memicu bel manual (via DB): \'Bel Masuk\'', '2025-08-28 12:07:04'),
+(251, 10, 'admin', 'Memicu bel manual (via DB): \'Bel Masuk\'', '2025-08-28 12:07:08');
 
 -- --------------------------------------------------------
 
@@ -427,16 +432,6 @@ CREATE TABLE `kontrol_bel` (
   `minggu` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `kontrol_bel`
---
-
-INSERT INTO `kontrol_bel` (`id`, `nama_jadwal`, `time`, `created_at`, `senin`, `selasa`, `rabu`, `kamis`, `jumat`, `sabtu`, `minggu`) VALUES
-(1, 'masuk', '08:29:40', '2025-08-23 00:29:04', 0, 0, 0, 0, 0, 1, 0),
-(2, 'masuk', '08:44:28', '2025-08-23 00:43:36', 0, 0, 0, 0, 0, 1, 0),
-(3, 'masuk', '08:48:47', '2025-08-23 00:47:55', 0, 0, 0, 0, 0, 1, 0),
-(4, 'masuk', '08:51:38', '2025-08-23 00:50:59', 0, 0, 0, 0, 0, 1, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -458,6 +453,29 @@ INSERT INTO `log_bel` (`id`, `jadwal_id`, `trigger_time`, `trigger_type`) VALUES
 (1, 1, '2025-07-26 21:37:25', 'auto'),
 (2, 2, '2025-07-26 22:07:25', 'auto'),
 (3, 5, '2025-07-26 22:37:25', 'manual');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `manual_control`
+--
+
+CREATE TABLE `manual_control` (
+  `id` int(11) NOT NULL,
+  `bell_name` varchar(100) NOT NULL,
+  `status` enum('pending','executed') NOT NULL DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `manual_control`
+--
+
+INSERT INTO `manual_control` (`id`, `bell_name`, `status`, `created_at`) VALUES
+(1, 'Bel Masuk', 'executed', '2025-08-28 12:05:02'),
+(2, 'Bel Masuk', 'executed', '2025-08-28 12:05:32'),
+(3, 'Bel Masuk', 'executed', '2025-08-28 12:07:04'),
+(4, 'Bel Masuk', 'executed', '2025-08-28 12:07:08');
 
 -- --------------------------------------------------------
 
@@ -596,6 +614,12 @@ ALTER TABLE `log_bel`
   ADD KEY `trigger_time` (`trigger_time`);
 
 --
+-- Indexes for table `manual_control`
+--
+ALTER TABLE `manual_control`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `students`
 --
 ALTER TABLE `students`
@@ -623,7 +647,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=247;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
 
 --
 -- AUTO_INCREMENT for table `alumni`
@@ -659,13 +683,19 @@ ALTER TABLE `jadwal_bel`
 -- AUTO_INCREMENT for table `kontrol_bel`
 --
 ALTER TABLE `kontrol_bel`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `log_bel`
 --
 ALTER TABLE `log_bel`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `manual_control`
+--
+ALTER TABLE `manual_control`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `students`

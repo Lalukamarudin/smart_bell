@@ -91,40 +91,29 @@ switch ($action) {
     break;
 
   case 'ring_bell_manually':
-    $bell_name = isset($_GET['bell_name']) ? $_GET['bell_name'] : 'Manual';
-    $esp8266_ip = '192.168.93.40'; 
+    // Nama bel diambil dari POST request JavaScript, bukan GET
+    $bell_name = $_POST['bell_name'] ?? 'Manual';
 
-    // Pastikan format URL-nya persis seperti ini:
-    $request_url = "http://{$esp8266_ip}/ring?bell_name=" . urlencode($bell_name);
+    try {
+        // Masukkan perintah ke database sebagai 'pending'
+        $stmt = $koneksi->prepare("INSERT INTO manual_control (bell_name, status) VALUES (?, 'pending')");
+        $stmt->bind_param("s", $bell_name);
+        $stmt->execute();
 
-    // 3. Gunakan cURL untuk mengirim request ke ESP8266
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_VERBOSE, true);
-    curl_setopt($ch, CURLOPT_URL, $request_url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 5); // Timeout dalam 5 detik
+        // Catat aktivitas
+        log_activity($koneksi, "Memicu bel manual (via DB): '{$bell_name}'");
+        
+        // Kirim respon sukses ke website
+        json_response(['success' => true, 'message' => "Perintah membunyikan '{$bell_name}' telah dikirim ke antrian."]);
 
-    $response = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $curl_error = curl_error($ch);
-    curl_close($ch);
-    
-    // 4. Catat aktivitas ke log database
-    log_activity($koneksi, "Memicu bel manual: '{$bell_name}'");
-
-    // 5. Beri respon ke website berdasarkan hasil request ke ESP8266
-    if ($http_code == 200) {
-      json_response(['success' => true, 'message' => "Perintah membunyikan '{$bell_name}' berhasil dikirim ke ESP."]);
-    } else {
-      // Jika ESP tidak merespon atau error
-      error_log("Gagal menghubungi ESP8266. URL: {$request_url}, HTTP Code: {$http_code}, cURL Error: {$curl_error}");
-      json_response([
-        'success' => false, 
-        'message' => "Gagal menghubungi perangkat bel. Pastikan perangkat aktif dan terhubung ke jaringan. (Error Code: {$http_code})"
-      ], 503); // Service Unavailable
+    } catch (Exception $e) {
+        // Jika database error
+        error_log("Gagal memasukkan perintah manual ke DB: " . $e->getMessage());
+        json_response([
+            'success' => false, 
+            'message' => "Gagal mengirim perintah ke perangkat. Database error."
+        ], 500);
     }
-
-    // --- AKHIR PERBAIKAN ---
     break;
 
   // --- AKSI PENGGUNA ---

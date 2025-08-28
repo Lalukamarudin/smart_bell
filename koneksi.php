@@ -16,6 +16,11 @@ $db_user = "root";
 $db_pass = "KrMJOGsCKNZEpEaDQcLDotHKiHmKUrsJ";
 $db_name = "railway";
 
+// $db_host = "localhost";
+// $db_user = "root";
+// $db_pass = "";
+// $db_name = "smart_bel";
+
 try {
     // Membuat objek koneksi baru
     $koneksi = new mysqli($db_host, $db_user, $db_pass, $db_name);
